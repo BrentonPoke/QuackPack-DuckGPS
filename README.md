@@ -1,9 +1,7 @@
-# [QuackPack-DuckGPS]
+# QuackPack-DuckGPS
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![ClusterDuck Protocol](https://img.shields.io/badge/ClusterDuck-Protocol-yellow.svg)](https://github.com/ClusterDuck-Protocol/ClusterDuck-Protocol)
-
-> **Instructions**: This is a template README for your QuackPack. Replace all `[bracketed text]` with your specific information. Delete this instruction block when done.
 
 ## Overview
 
@@ -25,16 +23,15 @@ This QuackPack adds [describe your specific functionality] to the Duck mesh netw
 May require a more sensitive GPS antenna for optimal performance.
 
 **Example**:
-- BME280 Temperature/Humidity Sensor (I2C)
 - GPS Module (if not built-in)
 
 ### Pinout Configuration
 
-| Component     | GPIO Pin | Notes     |
-|---------------|----------|-----------|
-| CDPCFG_GPS_RX | 34       | [I2C SDA] |
-| CDPCFG_GPS_TX | 12       | [I2C SCL] |
-| CDPCFG_PIN_LED1  | 25       | TBeam LED |
+| Component     | GPIO Pin | Notes        |
+|---------------|----------|--------------|
+| CDPCFG_GPS_RX | 34       | Receive Pin  |
+| CDPCFG_GPS_TX | 12       | Transfer Pin |
+| CDPCFG_PIN_LED1  | 25       | TBeam LED    |
 
 ## Installation
 
