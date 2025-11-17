@@ -13,8 +13,8 @@ void DuckGPS::setup() {
     UBXSendStatus status = ubx.sendMessageWithAck(
             UBXMessageClass::UBX_CLASS_CFG,
             UBXCfgMessageId::UBX_CFG_GNSS,
-            this->ubx_cfg_gnss.data(),
-            this->ubx_cfg_gnss.size(),
+            ubx_cfg_gnss.data(),
+            ubx_cfg_gnss.size(),
             200
     );
     if (status != UBX_SEND_SUCCESS)
@@ -23,8 +23,8 @@ void DuckGPS::setup() {
     status = ubx.sendMessageWithAck(
             UBXMessageClass::UBX_CLASS_CFG,
             UBXCfgMessageId::UBX_CFG_RATE,
-            this->message_1HZ.data(),
-            this->message_1HZ.size(),
+            message_1HZ.data(),
+            message_1HZ.size(),
             200
     );
     if (status != UBX_SEND_SUCCESS)
@@ -33,8 +33,8 @@ void DuckGPS::setup() {
     status = ubx.sendMessageWithAck(
             UBXMessageClass::UBX_CLASS_CFG,
             UBXCfgMessageId::UBX_CFG_NAVX5,
-            this->message_NAVX5.data(),
-            this->message_NAVX5.size(),
+            message_NAVX5.data(),
+            message_NAVX5.size(),
             200
     );
     if (status != UBX_SEND_SUCCESS)
@@ -43,8 +43,8 @@ void DuckGPS::setup() {
     status = ubx.sendMessageWithAck(
             UBXMessageClass::UBX_CLASS_CFG,
             0x39,
-            this->message_JAM.data(),
-            this->message_JAM.size(),
+            message_JAM.data(),
+            message_JAM.size(),
             200
     );
     if (status != UBX_SEND_SUCCESS)
