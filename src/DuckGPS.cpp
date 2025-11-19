@@ -13,19 +13,19 @@ void DuckGPS::setup() {
     UBXSendStatus status = ubx.sendMessageWithAck(
             UBXMessageClass::UBX_CLASS_CFG,
             UBXCfgMessageId::UBX_CFG_GNSS,
-            ubx_cfg_gnss.data(),
-            ubx_cfg_gnss.size(),
-            200
+            message_GNSS_8.data(),
+            message_GNSS_8.size(),
+            750
     );
     if (status != UBX_SEND_SUCCESS)
-        logdbg_ln("Failed to configure GNSS settings");
+        logdbg_ln("Failed to configure GNSS settings: %i", status);
 // Set update rate to 1Hz
     status = ubx.sendMessageWithAck(
             UBXMessageClass::UBX_CLASS_CFG,
             UBXCfgMessageId::UBX_CFG_RATE,
             message_1HZ.data(),
             message_1HZ.size(),
-            200
+            750
     );
     if (status != UBX_SEND_SUCCESS)
         logdbg_ln("Failed to set update rate");
@@ -35,7 +35,7 @@ void DuckGPS::setup() {
             UBXCfgMessageId::UBX_CFG_NAVX5,
             message_NAVX5.data(),
             message_NAVX5.size(),
-            200
+            750
     );
     if (status != UBX_SEND_SUCCESS)
         logdbg_ln("Failed to configure navigation settings");
@@ -45,7 +45,7 @@ void DuckGPS::setup() {
             0x39,
             message_JAM.data(),
             message_JAM.size(),
-            200
+            750
     );
     if (status != UBX_SEND_SUCCESS)
         logdbg_ln("Failed to enable jamming resistance");
@@ -65,13 +65,51 @@ void DuckGPS::setup() {
                                         UBXCfgMessageId::UBX_CFG_MSG,
                                         msg->data(),
                                         msg->size(),
-                                        100);
+                                        750);
         if (status != UBX_SEND_SUCCESS) {
             std::string err = std::string("Failed to ").append(p.second);
             logdbg_ln(err.c_str());
         }
     }
 }
+
+UBXSendStatus DuckGPS::sendMsgWithAck(UBXMessageClass msgClass, UBXCfgMessageId msgId, const uint8_t* payload, size_t payloadSize, uint16_t timeout) {
+    Adafruit_UBX ubx(GPSSerial);
+    return ubx.sendMessageWithAck(msgClass, msgId, payload, payloadSize, timeout);
+}
+
+UBXSendStatus DuckGPS::setBaudrate(uint32_t baudrate) {
+    Adafruit_UBX ubx(GPSSerial);
+    // Prepare the message to set baudrate
+    std::array<uint8_t,20> message_baud = {
+            0x01,                   // Port ID (1 = UART1)
+            0x00,                   // Reserved
+            0x00, 0x00,             // TX Ready (not used)
+            0xD0, 0x08, 0x00, 0x00, // Mode (8N1)
+            static_cast<uint8_t>(baudrate & 0xFF),         // Baudrate LSB
+            static_cast<uint8_t>((baudrate >> 8) & 0xFF),
+            static_cast<uint8_t>((baudrate >> 16) & 0xFF),
+            static_cast<uint8_t>((baudrate >> 24) & 0xFF), // Baudrate MSB
+            0x07, 0x00, 0x00, 0x00, // InProtoMask (UBX + NMEA)
+            0x07, 0x00, 0x00, 0x00  // OutProtoMask (UBX + NMEA)
+    };
+    UBXSendStatus status = ubx.sendMessageWithAck(
+            UBXMessageClass::UBX_CLASS_CFG,
+            UBXCfgMessageId::UBX_CFG_PRT,
+            message_baud.data(),
+            message_baud.size(),
+            2000
+    );
+    GPSSerial.end();
+    if (status == UBX_SEND_SUCCESS) {
+        GPSSerial.begin(baudrate, SERIAL_8N1);
+        logdbg_ln(std::string("Set GPS baudrate to: " + std::to_string(baudrate)).c_str());
+    } else {
+        logdbg_ln("Failed to set GPS baudrate");
+    }
+    return status;
+}
+
 void DuckGPS::readData(unsigned long ms) {
     std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
     do
