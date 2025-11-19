@@ -16,7 +16,6 @@ void setup() {
     duck.setupWithDefaults();; // or setupMamaDuck() / setupPapaDuck()
     // Initialize and configure your QuackPack
     dgps.setup();
-    dgps.setBaudrate(115200);
 
     Serial.println("Duck ready!");
 }
