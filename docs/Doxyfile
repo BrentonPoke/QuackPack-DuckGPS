@@ -4,9 +4,9 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "ClusterDuck Protocol"
+PROJECT_NAME           = "QuackPack-DuckGPS"
 PROJECT_NUMBER         =
-PROJECT_BRIEF          = "Firmware for an ad-hoc mesh network of Internet-of-Things devices based on LoRa (Long Range radio) that can be deployed rapidly and cost-effectively."
+PROJECT_BRIEF          = "Support library for the ClusterDuck Protocol project"
 PROJECT_LOGO           = assets/images/cdp_logo_transparent_small.png
 OUTPUT_DIRECTORY       = 
 CREATE_SUBDIRS         = NO
